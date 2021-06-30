@@ -16,7 +16,7 @@ User_Router.post('/users', async (req, res) => {
         await newUser.save();
         const newToken = await newUser.GenerateAuthTokens();
 
-        res.status(200).send({ user: newUser, token: newToken });
+        res.status(201).send({ user: newUser, token: newToken });
 
     } catch (e) {
         res.status(500).send(e);
@@ -40,10 +40,17 @@ User_Router.post("/users/login", async (req, res) => {
 
 // read the profile of an authenticated user
 User_Router.get('/users/me', authenticate, async (req, res) => {
-    console.log("file reading successful");
+    try {
+        res.status(200).send(req.user);
+
+    } catch (e){
+        res.status(401).send({message: "can't get data for unauthorized user"});
+    }
+    
+   
     //console.log(req.user);
     // console.log(req.token);
-    res.send(req.user);
+   
 });
 
 
@@ -97,6 +104,16 @@ User_Router.get("/users", async (req, res) => {
         res.status(404).send({ "error": "no users in database" });
     } else {
         res.status(200).send(users);
+    }
+});
+
+User_Router.get("/users/me/delete", authenticate, async (req,res) => {
+    try {
+        await user_model.findByIdAndDelete(req.user._id);
+        res.status(200).send({message: "delete successful"});
+
+    } catch (e) {
+        res.status(401).send({message: "can't delete a nonexistent user"});
     }
 });
 

@@ -17,6 +17,7 @@ const authenticate_token = async (req, res, next) => {
         }); // find the user based on the _id which is part of payload in jwt.sign and the decoded token
         if (!find_user) {
             res.status(401).send({ "error": "Please authenticate" });
+            next();
         } else {
             req.user = find_user;
             req.token = retrieved_token;
@@ -25,7 +26,7 @@ const authenticate_token = async (req, res, next) => {
 
 
     } catch (e) {
-        res.status(500).send({ "error": "Server error" });
+        res.status(401).send({ "error": "Server error" });
     }
 }
 module.exports = authenticate_token;
