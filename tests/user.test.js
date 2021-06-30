@@ -3,6 +3,7 @@ const index = require("../index");
 const user_model = require("../models/user-model");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const { response } = require("../index");
 
 const testUserDataID = new mongoose.Types.ObjectId();
 const testUserData = {
@@ -11,11 +12,11 @@ const testUserData = {
     email: "bob@hotmail.com",
     password: "12345678",
     tokens: [{
-        token: jwt.sign({id: testUserDataID}, "SecretToken")
+        token: jwt.sign({id: testUserDataID}, process.env.SECRET)
     }]
 }
 
-console.log(testUserData.tokens[0].token);
+
 
 // runs before each test
 beforeEach(async () => {
@@ -26,19 +27,39 @@ beforeEach(async () => {
 });
 
 test("sign up user", async () => {
-    await request(index)
+   const res =  await request(index)
     .post('/users')
     .send({
-        "name":"Abdulla",
-        "email":"Abdulla.Ghazalah@hotmail.com",
-        "password":"Baghdad1997"
+        name:"Abdulla",
+        email:"Abdulla.Ghazalah@hotmail.com",
+        password:"Baghdad1997"
     })
     .expect(201);
+
+    // assert the db was changed correctly
+    const user = await user_model.findById(res.body.user._id);
+
+    // checks if there's a user added 
+    expect(user).not.toBeNull();
+
+    // assert about the response body (data entered)
+    expect(res.body).toMatchObject({
+        user: {
+            name:"Abdulla",
+            email:"Abdulla.Ghazalah@hotmail.com",
+        },
+        token: user.tokens[0].token
+        
+    });
+
+    // assert that the password is encrypyed
+    expect(res.body.user.password).not.toBe("Baghdad1997");
+
 
 });
 
 test("login user existing user", async () => {
-    await request(index)
+    const res = await request(index)
     .post('/users/login')
     .send({
         email: testUserData.email,
@@ -46,6 +67,15 @@ test("login user existing user", async () => {
     })
     .expect(200);
 
+    // make sure user is added to db
+    const user = await user_model.findById(res.body.user._id);
+    expect(user).not.toBeNull();
+
+    // assert response token matches users 2nd token in db
+    console.log(res.body);
+    expect(res.body.token).toBe(user.tokens[1].token);
+
+    
 });
 
 test("should not login non-existent user", async () => {
@@ -74,10 +104,14 @@ test("should not fetch any thing for unauthenticated user", async() =>{
 });
 
 test("should delete account", async () => {
-    await request(index)
+    const res = await request(index)
     .get('/users/me/delete')
     .set('Authorization', `Bearer ${testUserData.tokens[0].token}`)
-    .expect(200)
+    .expect(200);
+
+    // assert that the user was actually deleted from db
+    const user = await user_model.findByIdAndDelete(res.body._id);
+    expect(user).toBeNull();
 });
 
 test("should not delete account", async () => {
