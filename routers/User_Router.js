@@ -58,9 +58,10 @@ User_Router.get('/users/me', authenticate, async (req, res) => {
 User_Router.post('/users/logout', authenticate, async (req, res) => {
     try {
         // basically just emptying the tokens array so the user won't have any tokens anymore to be validated
-        req.user.tokens = [];
-        await req.user.save();
-        res.status(200).send("logged out of every device and deleted all tokens completed");
+        const user = await user_model.findById(req.user._id);
+        user.tokens = [];
+        await user.save();
+        res.status(200).send({message: "logged out of every device and deleted all tokens completed",user: user});
 
     } catch (e) {
         res.status(500).send(e);
@@ -69,7 +70,7 @@ User_Router.post('/users/logout', authenticate, async (req, res) => {
 
 });
 // update user data 
-User_Router.put("/users/:id", authenticate, async (req, res) => {
+User_Router.put("/users/profile/update", authenticate, async (req, res) => {
     // validating the updates so only valid updates are name, email and password
     const incomingUpdates = Object.keys(req.body);
     const validUpdates = ['name', 'email', 'password'];
@@ -78,16 +79,15 @@ User_Router.put("/users/:id", authenticate, async (req, res) => {
     if (isValidUpdate == false) { // if any of the updates sent are not valid then an error will return
         return res.status(500).send({ "error": "Invalid updates" });
     } else {
-        const id = req.params.id;
         try {
-            const user = await user_model.findById(id); // find a user
+            const user = await user_model.findById(req.user._id); // find a user
             if (!user) { // if no user exist then return an 404 error
                 return res.status(404).send({ "error": "user not found in database" });
             } else {
                 // if the user is found update the data 
                 incomingUpdates.forEach((update) => user[update] = req.body[update]);
                 await user.save(); // save updates user data
-                res.status(200).send(user);
+                res.status(200).send({message: "update successful", user: user});
             }
 
         } catch (e) {

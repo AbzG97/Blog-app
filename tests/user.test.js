@@ -72,7 +72,6 @@ test("login user existing user", async () => {
     expect(user).not.toBeNull();
 
     // assert response token matches users 2nd token in db
-    console.log(res.body);
     expect(res.body.token).toBe(user.tokens[1].token);
 
     
@@ -103,6 +102,27 @@ test("should not fetch any thing for unauthenticated user", async() =>{
     .expect(401)
 });
 
+test("Should logout user", async () => {
+    const res = await request(index)
+    .post("/users/logout")
+    .set('Authorization', `Bearer ${testUserData.tokens[0].token}`)
+    .expect(200)
+
+    // assert that the tokens array is clean
+    // console.log(res.body);
+    const user = await user_model.findById(res.body.user._id);
+    expect(user.tokens).toHaveLength(0);
+    
+});
+
+test("Should not logout user", async () => {
+    const res = await request(index)
+    .post("/users/logout")
+    .expect(401)
+    
+});
+
+
 test("should delete account", async () => {
     const res = await request(index)
     .get('/users/me/delete')
@@ -118,4 +138,34 @@ test("should not delete account", async () => {
     await request(index)
     .get('/users/me/delete')
     .expect(401)
+});
+
+
+test("should update user data", async () => {
+    const res = await request(index)
+    .put('/users/profile/update')
+    .set('Authorization', `Bearer ${testUserData.tokens[0].token}`)
+    .send({
+        name:"Abdulla Updated",
+        email:"Abdulla.Ghazalah@hotmail.com",
+        password:"Baghdad1997Updated"
+    })
+    .expect(200);
+
+    // assert that the user data has been updated in the database
+    const user = await user_model.findById(res.body.user._id);
+    expect(user.email).toBe(res.body.user.email)
+});
+
+test("should not update user data", async () => {
+    const res = await request(index)
+    .put('/users/profile/update')
+    .send({
+        name:"Abdulla Updated",
+        email:"Abdulla.Ghazalah@hotmail.com",
+        password:"Baghdad1997Updated"
+    })
+    .expect(401);
+
+   
 });
