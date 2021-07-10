@@ -1,30 +1,11 @@
 const request = require("supertest");
 const index = require("../index");
 const user_model = require("../models/user-model");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const { response } = require("../index");
-
-const testUserDataID = new mongoose.Types.ObjectId();
-const testUserData = {
-    _id: testUserDataID,
-    name: "bob",
-    email: "bob@hotmail.com",
-    password: "12345678",
-    tokens: [{
-        token: jwt.sign({id: testUserDataID}, process.env.SECRET)
-    }]
-}
-
+const {setup, testUserData, testUserDataID } = require("./DbTestSetup");
 
 
 // runs before each test
-beforeEach(async () => {
-    await user_model.deleteMany(); // clean up and delete the data
-    // create dummy user data for other tests like logging in
-    await new user_model(testUserData).save();
-
-});
+beforeEach(setup);
 
 test("sign up user", async () => {
    const res =  await request(index)
