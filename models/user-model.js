@@ -57,7 +57,7 @@ userSchema.statics.findByCreds = async (email, password) => {
 // generate JWT tokens for user objects
 userSchema.methods.GenerateAuthTokens = async function(){
     const user = this;
-    const generated_token = JWT.sign({id: user._id.toString()}, "SecretToken"); // make a token 
+    const generated_token = JWT.sign({id: user._id.toString()}, process.env.SECRET); // make a token 
     user.tokens = user.tokens.concat({token: generated_token}); // concat to the tokens array
     await user.save(); // save the user
     //console.log(generated_token);
