@@ -87,7 +87,7 @@ Article_Router.delete('/articles/delete', authenticate, async (req, res) => {
 // update an article
 Article_Router.put('/articles/update', authenticate, async (req, res) => {
     const incomingUpdates = Object.keys(req.body);
-    const validUpdates = ['title'];
+    const validUpdates = ['title', 'description'];
     const isValidUpdate = incomingUpdates.every((update) => validUpdates.includes(update));
     if (isValidUpdate == false) { // if any of the updates sent are not valid then an error will return
         return res.status(500).send({
@@ -99,23 +99,25 @@ Article_Router.put('/articles/update', authenticate, async (req, res) => {
                 author: req.user._id
             });
             // console.log(article);
-            if (!article) {
-                res.status(404).send({
+            if (!article[0]) {
+                return res.status(404).send({
                     message: "article not found in database"
                 });
+            } else {
+                // if the user is found 
+
+                incomingUpdates.forEach((update) => article[0][update] = req.body[update]);
+                const date = new Date();
+                article[0].edited_on = date.toISOString();
+                await article[0].save(); // save updates user data
+                res.status(200).send({
+                    messsage: "article updated",
+                    article: article[0]
+                });
+
             }
-           
-            // if the user is found 
-    
-            incomingUpdates.forEach((update) => article[update] = req.body[update]);
-            // const date = new Date();
-            // article.edited_on = date.toISOString();
-            console.log(article);
-            await article.save(); // save updates user data
-            res.status(200).send({
-                messsage: "article updated",
-                article: article
-            });
+
+
 
         } catch (e) {
             res.status(500).send({
