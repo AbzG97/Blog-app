@@ -5,13 +5,13 @@ const authenticate = require("../authenticate_middleware");
 const Article_Router = express.Router();
 
 // create an article post
-Article_Router.post('/articles', authenticate, async (req, res) => {
+Article_Router.post('/articles', async (req, res) => {
     const date = new Date();
     const article = new article_model({
         title: req.body.title,
         description: req.body.description,
         date_created: date.toISOString(),
-        author: req.user._id,
+        author: "Bob",
         category: req.body.category,
         edited_on: date.toISOString()
     });
@@ -53,12 +53,18 @@ Article_Router.get("/myArticles", authenticate, async (req, res) => {
 })
 // get all articles in the database
 Article_Router.get('/articles', async (req, res) => {
+    console.log(req.query.type);
     try {
-        const articles = await article_model.find({});
-        res.send(articles);
-
+        if(req.query.type === "Latest"){
+            const articles = await article_model.find({});
+            res.send(articles);
+        } else {
+            const articles = await article_model.find({category: {"$in" : [req.query.type]}});
+            res.send(articles);
+        }
+        
     } catch (e) {
-        res.send(e);
+        res.status(500).send({message:"server error"});
     }
 
 });

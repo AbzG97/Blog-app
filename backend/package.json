@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "test": "env-cmd -f test.env jest --watch --runInBand"
+    "dev": "nodemon src/app.js",
+    "test": "env-cmd -f test.env jest --watch --runInBand",
+    "seed": "node ./seedDB.js"
   },
   "jest": {
     "testEnvironment": "node"
