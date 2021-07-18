@@ -1,4 +1,4 @@
-import Article from "./components/Article";
+import Articles from "./components/Articles";
 import Navbar from "./components/Navbar";
 import Tabsbar from "./components/Tabsbar";
 import React from "react";
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <Navbar/>
       <Tabsbar currentTab={currentTab} setCurrentTab={setCurrentTab}/>
-      <Article currentTab={currentTab}/>
+      <Articles currentTab={currentTab}/>
     </div>
   );
 }

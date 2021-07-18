@@ -25,6 +25,10 @@ const articleSchema = new mongoose.Schema({
         default: ["Generic", "Slice of life"]
 
     },
+    image: {
+        type: 'string',
+        required: true
+    },
     edited_on: {
         type: Date,
         required: false

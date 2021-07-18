@@ -13,6 +13,7 @@ Article_Router.post('/articles', async (req, res) => {
         date_created: date.toISOString(),
         author: "Bob",
         category: req.body.category,
+        image: req.body.image || "https://goinswriter.com/wp-content/uploads/2021/03/gw-keyboard-coffee-beans.jpeg",
         edited_on: date.toISOString()
     });
 

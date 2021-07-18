@@ -1,54 +1,55 @@
-import React from "react";
-import axios from "axios";
+import React from 'react'
+import styled from 'styled-components'
+import { Card, CardActionArea, CardContent, CardMedia } from '@material-ui/core'
 
-function Article({ currentTab }) {
-  const [articleType, setArticleType] = React.useState();
-  const [articles, setArticles] = React.useState();
-
-  React.useEffect(() => {
-    switch (currentTab) {
-      case 0:
-        ViewArticles("Latest");
-        break;
-      case 1:
-        ViewArticles("Gaming");
-        break;
-      case 2:
-        ViewArticles("Programming");
-        break;
-      case 3:
-        ViewArticles("Food");
-        break;
-      case 4:
-        ViewArticles("News");
-        break;
-      default:
-        ViewArticles("Latest");
-    }
-  }, [currentTab]);
-
-  const ViewArticles = async (type) => {
-    const res = await axios({
-      method: "GET",
-      url: `/articles/?type=${type}`,
-    });
-    console.log(res.data);
-    setArticles(res.data);
-    setArticleType(type);
-  };
-  // ViewArticles();
-
-  return (
-    <div>
-      <h1> Article </h1>
-      <p> {articleType} </p>
-      {articles ? (
-        articles.map((article) => <div key={article._id}> <p>{JSON.stringify(article)} </p> </div>)
-      ) : (
-        <p> Loading </p>
-      )}
-    </div>
-  );
+function Article({article}) {
+    return (
+        <StyledArticle>
+            <Card className="card">
+                <CardMedia component="img" alt="article image" height="200" image={article.image} title="article image"/>
+                <CardContent>
+                    <p className="article-title">{article.title}</p>
+                    <p className="article-desc">{article.description}</p>
+                    <div className="article-categories">{article.category.map((category) => (<p> #{category} </p> ))} </div>
+                </CardContent>
+            </Card>
+        </StyledArticle>
+    )
 }
 
-export default Article;
+const StyledArticle = styled.div`
+    .card {
+        max-width: 500px;
+        margin: 1rem;
+        box-shadow: none;
+        border-bottom: 3px solid black;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+        .article-title {
+            font-size: 3rem;
+            font-weight: bold;
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            padding: .25rem 0 .25rem 0;
+
+            
+        }
+        .article-desc {
+            font-size: 1rem;
+
+        }
+        .article-categories {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-evenly;
+        }
+    }
+
+
+
+
+`
+
+export default Article
