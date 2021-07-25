@@ -5,18 +5,22 @@ const User_Router = express.Router();
 const authenticate = require("../authenticate_middleware");
 
 // create user / sign up 
-User_Router.post('/users', async (req, res) => {
+User_Router.post('/users/create', async (req, res) => {
+    console.log(req.body);
     const newUser = new user_model({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password
     });
-
+    
     try {
-        await newUser.save();
-        const newToken = await newUser.GenerateAuthTokens();
+        
+        const new_token = await newUser.GenerateAuthTokens();
 
-        res.status(201).send({ user: newUser, token: newToken });
+        res.cookie('auth_token',new_token, { httpOnly: true, secure: false, maxAge: 3600000 });
+        await newUser.save();
+        console.log(newUser);
+        res.status(201).send({ user: newUser, token: new_token });
 
     } catch (e) {
         res.status(500).send(e);
@@ -27,10 +31,13 @@ User_Router.post('/users', async (req, res) => {
 // it uses the email and password of a user to find them in the database
 // it also generates jwt tokens for the user object to be used in other routes that require authentication. 
 User_Router.post("/users/login", async (req, res) => {
+    console.log(req.body);
     try {
         const user = await user_model.findByCreds(req.body.email, req.body.password);
-        const newToken = await user.GenerateAuthTokens();
-        res.status(200).send({ user: user, token: newToken });
+        const new_token = await user.GenerateAuthTokens();
+        res.cookie('auth_token',new_token, { httpOnly: true, secure: false, maxAge: 3600000 });
+        await user.save();
+        res.status(200).send({ user: user, token: new_token });
 
     } catch (e) {
         res.status(404).send({ "error": "can't find user" });
@@ -41,7 +48,9 @@ User_Router.post("/users/login", async (req, res) => {
 // read the profile of an authenticated user
 User_Router.get('/users/me', authenticate, async (req, res) => {
     try {
-        res.status(200).send(req.user);
+        const user = await user_model.findById(req.user._id);
+        console.log(user);
+        res.status(200).send({user: user});
 
     } catch (e){
         res.status(401).send({message: "can't get data for unauthorized user"});
