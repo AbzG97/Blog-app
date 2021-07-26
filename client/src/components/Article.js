@@ -8,6 +8,10 @@ function Article({article}) {
             <Card className="card">
                 <CardMedia component="img" alt="article image" height="200" image={article.image} title="article image"/>
                 <CardContent>
+                    <div className="user-and-date">
+                        <p>Posted by user</p>
+                        <p>July 26 2021</p>
+                    </div>
                     <p className="article-title">{article.title}</p>
                     <p className="article-desc">{article.description}</p>
                     <div className="article-categories">{article.category.map((category) => (<p> #{category} </p> ))} </div>
@@ -21,17 +25,28 @@ const StyledArticle = styled.div`
     .card {
         max-width: 500px;
         margin: 1rem;
-        box-shadow: none;
-        border-bottom: 3px solid black;
+        box-shadow: none;        
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        -webkit-box-shadow: 0px 14px 14px 1px rgba(0,0,0,0.2); 
+        box-shadow: 0px 14px 14px 1px rgba(0,0,0,0.2);
+        /* border: 2px solid black; */
+
+        .user-and-date{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+        }
+       
 
         .article-title {
             font-size: 3rem;
             font-weight: bold;
-            border-top: 2px solid black;
+            /* border-top: 2px solid black; */
             border-bottom: 2px solid black;
             padding: .25rem 0 .25rem 0;
+            margin: 0rem;
 
             
         }

@@ -43,7 +43,7 @@ function Articles({ currentTab }) {
   return (
     <ArticlesStyle>
       {articles ? <div className="articles-grid"> {
-        articles.map((article) => <Article key={article._id} article={article} />)
+        articles.map((article) => <div className="article"><Article  key={article._id} article={article} /></div>)
       } </div> : (
         <p> Loading </p>
       )}
@@ -54,11 +54,20 @@ function Articles({ currentTab }) {
 const ArticlesStyle = styled.div`
   .articles-grid {
     margin-top: 1rem;
-    width: 100%;
+    width: 65%;
     display: grid;
-    grid-template-columns: 33% 33% 33%;
-    grid-template-rows: auto;
+    grid-template-columns: 50% 50%;
+    /* grid-template-rows: auto; */
+    grid-gap: 10px;
+    /* .article:nth-of-type(odd) {
+      height: 50vh;
+    }
+
+    .article:nth-of-type(even) {
+      height: 30vh;
+    } */
   }
+  
 `
 
 export default Articles;

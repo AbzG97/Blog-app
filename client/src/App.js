@@ -6,6 +6,7 @@ import React from "react";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { useUserContext } from "./UserContext";
+import CreateArticleForm from "./pages/CreateArticleForm";
 
 function App() {
   const [currentTab, setCurrentTab] = React.useState(0);
@@ -26,6 +27,10 @@ function App() {
 
             <Route path="/login">
               <Login />
+            </Route>
+
+            <Route path="/postform">
+              <CreateArticleForm/>
             </Route>
           </Switch>
         </div>

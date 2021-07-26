@@ -33,6 +33,15 @@ function Navbar() {
               variant="outlined"
               size="large"
               color="primary"
+            >
+              <Link to="/postform">Create article</Link>
+              </Button>
+            
+            <Button
+              className="button"
+              variant="outlined"
+              size="large"
+              color="primary"
               onClick={LogoutUser}
             >
               Logout
@@ -65,19 +74,23 @@ function Navbar() {
 }
 
 const StyledNavbar = styled.div`
-  /* background-color: #333; */
+  background-color: #333;
+  height: 45vh;
+  background-image: url('https://images.unsplash.com/photo-1500989145603-8e7ef71d639e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80');
+  background-repeat: no-repeat;
+  background-size: cover;
   overflow: hidden;
   /* position: fixed; */
   width: 100%;
   top: 0;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   .header {
     width: inherit;
     display: flex;
     justify-content: flex-start;
-    padding: 1rem;
+    /* padding: 1rem; */
   }
   .buttons {
     width: inherit;
