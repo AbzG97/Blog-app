@@ -1,20 +1,24 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import styled from 'styled-components'
 import { TextField, Button } from '@material-ui/core'
 import { useUserContext } from '../UserContext'
+
 
 function Signup() {
     const [email, setEmail] = React.useState();
     const [name, setName] = React.useState();
     const [password, setPassword] = React.useState();
     const {Signup} = useUserContext();
+    const history = useHistory();
 
 
     const CreateUser = (e) => {
         e.preventDefault();
         Signup(email, name, password);
         // console.log(user);
+        history.push('/');
+
     }
     return (
         <StyledSignupPage>

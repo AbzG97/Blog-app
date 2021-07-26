@@ -26,10 +26,15 @@ export const UserProvider = ({children}) => {
         setUser(current_user.data);
         console.log("called");
     }
+
+    const Logout = async () => {
+        await axios.post("/users/logout", {withCredentials: true});
+        setUser();
+    }
     
 
     return (
-        <UserContext.Provider value={{user, Signup, Login, fetchCurrentUser}}>
+        <UserContext.Provider value={{user, Signup, Login, fetchCurrentUser, Logout}}>
             {children}
         </UserContext.Provider>
     )

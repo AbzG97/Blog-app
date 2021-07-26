@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { TextField, Button } from '@material-ui/core'
 import { useUserContext } from '../UserContext'
@@ -8,11 +8,13 @@ function Login() {
     const [email, setEmail] = React.useState();
     const [password, setPassword] = React.useState();
     const {Login} = useUserContext();
+    const history = useHistory();
 
 
     const LoginUser = (e) => {
         e.preventDefault();
         Login(email, password);
+        history.push("/");
     }
     return (
         <StyledLoginPage>
