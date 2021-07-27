@@ -9,8 +9,8 @@ function Article({article}) {
                 <CardMedia component="img" alt="article image" height="200" image={article.image} title="article image"/>
                 <CardContent>
                     <div className="user-and-date">
-                        <p>Posted by user</p>
-                        <p>July 26 2021</p>
+                        <p>Posted by {article.author}</p>
+                        <p>{new Date(article.date_created).toDateString()}</p>
                     </div>
                     <p className="article-title">{article.title}</p>
                     <p className="article-desc">{article.description}</p>

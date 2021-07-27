@@ -5,17 +5,19 @@ const authenticate = require("../authenticate_middleware");
 const Article_Router = express.Router();
 
 // create an article post
-Article_Router.post('/articles', async (req, res) => {
+Article_Router.post('/articles', authenticate, async (req, res) => {
+    // console.log(req.user);
     const date = new Date();
     const article = new article_model({
         title: req.body.title,
         description: req.body.description,
         date_created: date.toISOString(),
-        author: "Bob",
-        category: req.body.category,
+        author: req.user._id,
+        category: req.body.filtered,
         image: req.body.image || "https://goinswriter.com/wp-content/uploads/2021/03/gw-keyboard-coffee-beans.jpeg",
         edited_on: date.toISOString()
     });
+    console.log(article);
 
     try {
         await article.save();

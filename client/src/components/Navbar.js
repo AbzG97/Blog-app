@@ -74,11 +74,11 @@ function Navbar() {
 }
 
 const StyledNavbar = styled.div`
-  background-color: #333;
-  height: 45vh;
-  background-image: url('https://images.unsplash.com/photo-1500989145603-8e7ef71d639e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80');
+  /* background-color: #333; */
+  /* height: 45vh; */
+  /* background-image: url('https://images.unsplash.com/photo-1500989145603-8e7ef71d639e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80');
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: cover; */
   overflow: hidden;
   /* position: fixed; */
   width: 100%;
