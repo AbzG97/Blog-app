@@ -11,8 +11,8 @@ import {
   Snackbar
  
 } from "@material-ui/core";
-
 import axios from "axios";
+import styled from "styled-components";
 
 const CreateArticleForm = () => {
 
@@ -23,7 +23,6 @@ const CreateArticleForm = () => {
   const [articleCreated, setArticleCreated] = React.useState({isCreated: false, message: String});
   const history = useHistory();
 
-  // const {Programming, Gaming, News} = category;
 
   const handleCategoryChange = (e) => {
     setCategory({ ...category, [e.target.name]: e.target.checked });
@@ -60,8 +59,10 @@ const CreateArticleForm = () => {
   };
 
   return (
-    <div>
-      <h1>Create article</h1>
+    <StyledCreateArticleForm>
+
+    
+      <h1>Create an Article</h1>
       <form onSubmit={PostArticle}>
         <TextField
           className="text-field"
@@ -80,9 +81,9 @@ const CreateArticleForm = () => {
           rows={4}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <FormLabel component="legend">Assign responsibility</FormLabel>
+        <FormLabel component="legend">Choose category</FormLabel>
         <FormControl component="fieldset">
-          <FormGroup>
+          <FormGroup className="categories-list">
             <FormControlLabel
               control={
                 <Checkbox onChange={handleCategoryChange} name="Programming" />
@@ -113,11 +114,35 @@ const CreateArticleForm = () => {
 
       <Link to="/">Home</Link>
       <Snackbar open={articleCreated.isCreated} 
-        autoHideDuration={6000}
+        autoHideDuration={1000}
         // anchorOrigin={ "bottom", "center" }
         message={articleCreated.message} />
-    </div>
+    </StyledCreateArticleForm>
   );
 }
+
+const StyledCreateArticleForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  form {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 60%;
+    .text-field {
+      width: inherit;
+    }
+    .categories-list {
+      display: grid;
+      width: 35vw;
+      grid-template-columns: 50% 50%;
+      grid-template-rows: auto;
+    }
+  }
+`
 
 export default CreateArticleForm;
